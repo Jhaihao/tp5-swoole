@@ -106,10 +106,10 @@
 
 
             $.ajax({
-                url: "/",
+                url: "index/index/send",
                 type: "post",
                 dataType: "json",
-                data: phone_num,
+                data: {phone_num : phone_num},
 
                 success: function (res) {
                     resolve(res)

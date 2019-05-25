@@ -1,15 +1,27 @@
 <?php
 namespace app\index\controller;
-class Index
+use app\common\lib\Util;
+use think\Controller;
+
+class Index extends Controller
 {
     public function index()
     {
-
-        return json('1234');
+       return 'index';
     }
 
-    public function index1()
+    /**
+     *发送验证码
+     */
+    public function send()
     {
-        return 'index-1';
+
+        return 'send';
+
+        $phoneNum = request()->post('phone_num', 0, 'intval');
+        if(empty($phoneNum)) {
+            // status 0 1  message data
+            return Util::show(config('code.error'), 'error');
+        }
     }
 }

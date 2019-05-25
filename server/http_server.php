@@ -13,7 +13,7 @@ $http = new swoole_http_server("0.0.0.0", 9501);
 $http->set(
     [
         'enable_static_handler' => true,
-        'document_root' => "/www/tp5demo/public/static",
+        'document_root' => "/www/tp5-swoole/public/static",
         'worker_num' => 5,
     ]
 );
