@@ -2,6 +2,8 @@
 
 namespace app\index\controller;
 
+use app\common\lib\Redis;
+use app\common\lib\redis\Predis;
 use app\common\lib\Util;
 use think\Controller;
 
@@ -35,15 +37,43 @@ class Index extends Controller
         }
 
         if (true) {  //模拟返回状态等于 ok
-            //异步mysql储存验证码.
-
+            //redis储存验证码.
             $redis = new \Swoole\Coroutine\Redis();
             $redis->connect(config('redis.host'), config('redis.port'));
-            $redis->set('sms', '123');
-
+            $redis->set('sms_15992477600', '1879');
+            return Util::show(config('code.success'), '验证码发送成功');
+        }else {
+            return Util::show(config('code.error'), '验证码发送失败');
         }
+    }
 
-        return '1';
+    public function login()
+    {
+        $phoneNum = intval($_POST['phone_num']);
+        $code = intval($_POST['code']);
+
+        if(empty($phoneNum) || empty($code)) {
+            return Util::show(config('code.error'), 'phoneNum或code参数为空');
+        }
+        // redis code
+        try {
+            $redisCode = Predis::getInstance()->get(Redis::smsKey($phoneNum)); //从redis验证码
+        }catch (\Exception $e) {
+            echo $e->getMessage();
+        }
+        if($redisCode == $code) {
+            // 写入redis
+            $data = [
+                'user' => $phoneNum,
+                'srcKey' => md5(Redis::userkey($phoneNum)),
+                'time' => time(),
+                'isLogin' => true,
+            ];
+            Predis::getInstance()->set(Redis::userkey($phoneNum), $data);
+            return Util::show(config('code.success'), 'ok', $data);
+        } else {
+            return Util::show(config('code.error'), 'login error');
+        }
 
     }
 }
