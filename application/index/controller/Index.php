@@ -30,21 +30,17 @@ class Index extends Controller
         //生成一个随机数
         $code = rand(1000, 9999);
 
-        try {
-            $response = $code;  //这里是用第三方短信jdk  返回code
-        } catch (\Exception $e) {
-            return Util::show(config('code.error'), '短信jdk内部异常');
-        }
 
-        if (true) {  //模拟返回状态等于 ok
-            //redis储存验证码.
-            $redis = new \Swoole\Coroutine\Redis();
-            $redis->connect(config('redis.host'), config('redis.port'));
-            $redis->set('sms_15992477600', '1879');
-            return Util::show(config('code.success'), '验证码发送成功');
-        }else {
-            return Util::show(config('code.error'), '验证码发送失败');
-        }
+        $taskData = [
+            'method' => 'sendSms',
+            'data' => [
+                'phone' => $phoneNum,
+                'code' => $code,
+            ]
+        ];
+        $_POST['http_server']->task($taskData);
+        return Util::show(config('code.success'), 'ok');
+
     }
 
     public function login()
@@ -52,9 +48,12 @@ class Index extends Controller
         $phoneNum = intval($_POST['phone_num']);
         $code = intval($_POST['code']);
 
+
         if(empty($phoneNum) || empty($code)) {
             return Util::show(config('code.error'), 'phoneNum或code参数为空');
         }
+
+
         // redis code
         try {
             $redisCode = Predis::getInstance()->get(Redis::smsKey($phoneNum)); //从redis验证码
