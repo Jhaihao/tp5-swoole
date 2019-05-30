@@ -1,9 +1,11 @@
 <?php
-namespace app\common\lib\redis;
 /**
- * Class Predis 同步redis(需要安装phpredis扩展)
- * @package app\common\lib\redis
+ * Created by PhpStorm.
+ * User: baidu
+ * Date: 18/3/26
+ * Time: 上午3:52
  */
+namespace app\common\lib\redis;
 class Predis {
     public $redis = "";
     /**
@@ -21,7 +23,7 @@ class Predis {
 
     private function __construct() {
         $this->redis = new \Redis();
-        $result = $this->redis->connect(config('redis.host'), config('redis.port'), config('redis.timeOut'));
+        $result = $this->redis->connect('127.0.0.1', '6379', 5);
         if($result === false) {
             throw new \Exception('redis connect error');
         }
@@ -81,5 +83,12 @@ class Predis {
             return '';
         }
         $this->redis->$name($arguments[0], $arguments[1]);
+    }
+
+    public function sRem($key,$value){
+        return $this->redis->sRem($key,$value);
+    }
+    public function del($key){
+        return $this->redis->del($key);
     }
 }

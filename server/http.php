@@ -22,7 +22,7 @@ class Http
 
         $this->http->on("workerstart", [$this, 'onWorkerStart']);
         $this->http->on("request", [$this, 'onRequest']);
-       // $this->http->on("task", [$this, 'onTask']);
+        $this->http->on("task", [$this, 'onTask']);
       //  $this->http->on("finish", [$this, 'onFinish']);
        // $this->http->on("close", [$this, 'onClose']);
 

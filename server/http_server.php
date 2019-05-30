@@ -18,6 +18,9 @@ $http->set(
     ]
 );
 $http->on('WorkerStart', function ($serv, $worker_id){
+
+
+
     define('APP_PATH', __DIR__ . '/../application/'); //重点3
     // 加载基础文件
     require __DIR__ . '/../thinkphp/base.php'; //重点1

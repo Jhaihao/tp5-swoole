@@ -14,10 +14,6 @@ $serv->set([
  */
 $serv->on('connect', function ($serv, $fd, $reactor_id) {
     echo "线程id=: {$reactor_id} -客户端唯一标示是 ". $fd .PHP_EOL;
-    $serv->tick(100, function() use ($serv, $fd) {
-       // echo 'hahah' . PHP_EOL;
-        $serv->send($fd, "杜嘉泳我想你了 - " . rand(1000, 9999) . '❤' . PHP_EOL);
-    });
 });
 
 //监听数据接收事件

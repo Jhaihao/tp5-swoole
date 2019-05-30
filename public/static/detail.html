@@ -14,7 +14,8 @@
 	<link rel="stylesheet" type="text/css" href="./assert/css/main.css" />
 	<link rel="stylesheet" href="./assert/iconfont/iconfont.css">
 	<link rel="shortcut icon" href="./favicon.ico">
-	<script src="./assert/js/jquery-3.3.1.min.js"></script>
+	<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+<!--	<script src="./assert/js/jquery-3.3.1.min.js"></script>-->
 	<style>
 		/*详情界面保持上部分静止，下面滚动; 同样利用flex布局 poster自然高度， tab-nav自然高度， tab-block填满剩余部分*/
 		.poster {
@@ -477,5 +478,35 @@
 			});
 		});
 	</script>
+
+	<script>
+		var wsUrl = "ws://loca.tp5-swoole.com:9501";
+
+		var websocket = new WebSocket(wsUrl);
+
+		//实例对象的onopen属性
+		websocket.onopen = function(evt) {
+			//websocket.send("hello-sinwa");
+			//console.log("conected-swoole-success");
+		}
+
+		// 实例化 onmessage
+		websocket.onmessage = function(evt) {
+			console.log("接收到的数据" + evt.data);
+		}
+
+		//onclose
+		websocket.onclose = function(evt) {
+			console.log("close");
+		}
+		//onerror
+
+		websocket.onerror = function(evt, e) {
+			console.log("error:" + evt.data);
+		}
+
+	</script>
+
+
 </body>
 </html>
