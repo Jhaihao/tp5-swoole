@@ -2,22 +2,17 @@
 
 use app\common\lib\task\Task;
 use think\facade\Config;
-/**
- * Created by PhpStorm.
- * User: baidu
- * Date: 18/3/27
- * Time: 上午12:50
- */
+
 class Ws {
     CONST HOST = "0.0.0.0";
     CONST PORT = 9501;
-    //CONST CHART_PORT = 9502;
+    CONST CHART_PORT = 9502;
 
     public $ws = null;
     public function __construct() {
         // 获取 key 有值 del
         $this->ws = new swoole_websocket_server(self::HOST, self::PORT);
-       // $this->ws->listen(self::HOST, self::CHART_PORT, SWOOLE_SOCK_TCP);
+        $this->ws->listen(self::HOST, self::CHART_PORT, SWOOLE_SOCK_TCP);
 
         $this->ws->set(
             [
@@ -51,6 +46,8 @@ class Ws {
      */
     public function onWorkerStart($server,  $worker_id) {
         define('APP_PATH', __DIR__ . '/../application/'); //重点3
+
+
         // 加载基础文件
         require __DIR__ . '/../thinkphp/base.php'; //重点1
 
@@ -99,7 +96,7 @@ class Ws {
             }
         }
 
-        //$this->writeLog();
+        $this->writeLog();
         $_POST['http_server'] = $this->ws;
 
         ob_start();
@@ -160,7 +157,7 @@ class Ws {
         // fd redis [1]
        \app\common\lib\redis\Predis::getInstance()->sAdd('live_game_key', $request->fd);
        echo $request->fd.'上线了'.PHP_EOL;
-
+      // print_r($ws);
     }
 
     /**
@@ -187,19 +184,25 @@ class Ws {
     /**
      * 记录日志
      */
-//    public function writeLog() {
-//        $datas = array_merge(['date' => date("Ymd H:i:s")],$_GET, $_POST, $_SERVER);
-//
-//        $logs = "";
-//        foreach($datas as $key => $value) {
-//            $logs .= $key . ":" . $value . " ";
-//        }
-//
+    public function writeLog() {
+        $datas = array_merge(['date' => date("Ymd H:i:s")],$_GET, $_POST, $_SERVER);
+
+        $logs = "";
+        foreach($datas as $key => $value) {
+            $logs .= $key . ":" . $value . " ";
+        }
+
+      //  $content = date("Ymd H:i:s")."\n";
+        $res = swoole_async_writefile(__DIR__."/../runtime/" . date("Ym") . "1_access.log", $logs.PHP_EOL, function($filename) {
+
+        }, FILE_APPEND);
+
 //        swoole_async_writefile(APP_PATH.'../runtime/log/'.date("Ym")."/".date("d")."_access.log", $logs.PHP_EOL, function($filename){
 //            // todo
 //        }, FILE_APPEND);
-//
-//    }
+
+
+    }
 }
 
 new Ws();

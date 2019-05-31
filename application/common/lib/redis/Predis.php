@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: baidu
- * Date: 18/3/26
- * Time: 上午3:52
- */
+
 namespace app\common\lib\redis;
 class Predis {
     public $redis = "";
