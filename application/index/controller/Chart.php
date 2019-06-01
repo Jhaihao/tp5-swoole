@@ -1,10 +1,13 @@
 <?php
 namespace app\index\controller;
 use app\common\lib\Util;
+use think\Request;
+
 class Chart
 {
     public function index()
     {
+
         // 登录
         if(empty($_POST['game_id'])) {
             return Util::show(config('code.error'), 'error');

@@ -20,6 +20,7 @@ class Ws {
                 'document_root' => "/www/tp5-swoole/public/static",
                 'worker_num' => 4,
                 'task_worker_num' => 4,
+               // 'daemonize' => true
             ]
         );
         $this->ws->on("workerstart", [$this, 'onWorkerStart']);
@@ -52,6 +53,7 @@ class Ws {
         require __DIR__ . '/../thinkphp/base.php'; //重点1
 
         \app\common\lib\redis\Predis::getInstance()->del('live_game_key');
+
     }
 
     /**
@@ -186,20 +188,18 @@ class Ws {
      */
     public function writeLog() {
         $datas = array_merge(['date' => date("Ymd H:i:s")],$_GET, $_POST, $_SERVER);
-
+        print_r($datas);
         $logs = "";
         foreach($datas as $key => $value) {
             $logs .= $key . ":" . $value . " ";
         }
 
-      //  $content = date("Ymd H:i:s")."\n";
-        $res = swoole_async_writefile(__DIR__."/../runtime/" . date("Ym") . "1_access.log", $logs.PHP_EOL, function($filename) {
 
-        }, FILE_APPEND);
-
-//        swoole_async_writefile(APP_PATH.'../runtime/log/'.date("Ym")."/".date("d")."_access.log", $logs.PHP_EOL, function($filename){
-//            // todo
+//
+//        $res = swoole_async_writefile(__DIR__."/../runtime/".date("Ym") ."/"."access.log", $logs.PHP_EOL, function($filename) {
+//
 //        }, FILE_APPEND);
+
 
 
     }
