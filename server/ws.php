@@ -193,14 +193,9 @@ class Ws {
         foreach($datas as $key => $value) {
             $logs .= $key . ":" . $value . " ";
         }
+        $res = swoole_async_writefile(__DIR__."/../runtime/".date("Ym") ."/"."access.log", $logs.PHP_EOL, function($filename) {
 
-
-//
-//        $res = swoole_async_writefile(__DIR__."/../runtime/".date("Ym") ."/"."access.log", $logs.PHP_EOL, function($filename) {
-//
-//        }, FILE_APPEND);
-
-
+        }, FILE_APPEND);
 
     }
 }
